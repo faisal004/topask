@@ -5,9 +5,11 @@ import { Server } from 'socket.io';
 
 interface Message {
   id: string;
+  author:string
   message: string;
   upvotes: number;
   roomId: string;
+  answered: Boolean
 }
 interface Room {
   socketId: string;
@@ -66,10 +68,10 @@ io.on('connection', (socket) => {
     console.log(`Message received from ${socket.id}: ${message.roomId} `);
     const roomData = rooms[message.roomId];
     if (roomData) {
-      const messageObject = { ...message, id: `${message.id}`, upvotes: 0 };
+      const messageObject = { ...message, id: `${message.id}`, upvotes: 0,answered:false };
       messages.push(messageObject);
 
-      if (messages.length > 100) {
+      if (messages.length > 10000) {
         messages.splice(0, 1);
       }
 
@@ -83,6 +85,14 @@ io.on('connection', (socket) => {
     const index = messages.findIndex((msg) => msg.id === id);
     if (index !== -1) {
       messages[index].upvotes++;
+      io.emit('message', messages[index]);
+    }
+  });
+  socket.on('answered', (id: string) => {
+    const index = messages.findIndex((msg) => msg.id === id);
+    if (index !== -1) {
+      messages[index].answered=true;
+      console.log(`${id} is answered`)
       io.emit('message', messages[index]);
     }
   });
