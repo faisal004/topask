@@ -6,12 +6,12 @@ import { v4 as uuidv4 } from 'uuid'
 import { useUserRoom } from '@/providers/user-name-provider'
 import { useRouter } from 'next/navigation'
 
-interface Message {
-  id: string
-  message: string
-  upvotes: number
-  roomId: string
-}
+// interface Message {
+//   id: string
+//   message: string
+//   upvotes: number
+//   roomId: string
+// }
 
 export default function Home() {
   const { socket } = useSocket()
@@ -30,14 +30,14 @@ export default function Home() {
     setCurrentSocketId,
     currentSocketId,
   } = useUserRoom()
-  const [message, setMessage] = useState<string>('')
-  const [receivedMessages, setReceivedMessages] = useState<Message[]>([])
-  const [votedIds, setVotedIds] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     if (!socket) {
       return
     } else {
+      socket.on('roomDoesNotExists', ({ joinroomId }: any) => {
+        alert(`Room ${joinroomId} does not exists.`)
+      })
       socket.on('roomExists', ({ roomId }: any) => {
         alert(`Room ${roomId} already exists.`)
       })
@@ -45,39 +45,20 @@ export default function Home() {
         setRoomCreator(username)
         setCurrentSocketId(creatorSocketId)
       })
-
-      socket.on('message', (receivedMessage: Message) => {
-        const existingMessageIndex = receivedMessages.findIndex(
-          (msg) => msg.id === receivedMessage.id,
-        )
-
-        if (existingMessageIndex !== -1) {
-          const updatedMessages = [...receivedMessages]
-          updatedMessages[existingMessageIndex].upvotes =
-            receivedMessage.upvotes
-          setReceivedMessages(updatedMessages)
-        } else {
-          setReceivedMessages((prevMessages) => [
-            ...prevMessages,
-            receivedMessage,
-          ])
-        }
-      })
     }
 
     return () => {
       if (socket) {
-        socket.off('message')
         socket.off('roomCreated')
+        socket.off('roomExists')
       }
     }
-  }, [socket, receivedMessages])
+  }, [socket])
   const createRoom = () => {
     if (roomId?.trim() !== '' && username?.trim() !== '' && socket) {
       socket.emit('createRoom', { roomId, username })
       console.log(`Room created: ${roomId} by user ${username}`)
-      setRoomId('')
-      setUsername('')
+
       //handle the case if room exist show alert for now
       router.push('/chat')
     }
@@ -88,36 +69,13 @@ export default function Home() {
       console.log(`Joining room: ${joinroomId} as user ${joinroomId}`)
       socket.emit('joinRoom', { joinroomId, joinusername })
       console.log(`Joining room: ${joinroomId} as user ${joinroomId}`)
-      setRoomId('')
-    }
-  }
-  const sendMessage = () => {
-    if (message.trim() !== '' && socket) {
-      socket.emit('message', {
-        id: uuidv4(),
-        message,
-        upvotes: 0,
-        roomId: joinroomId,
-      })
-      setMessage('')
+
+      router.push('/chat')
     }
   }
 
-  const handleUpvote = (id: string) => {
-    if (socket && !votedIds.has(id)) {
-      socket.emit('upvote', id)
-      setVotedIds((prevIds) => new Set(prevIds.add(id)))
-    }
-  }
-
-  const sortedMessages = receivedMessages.sort((a, b) => b.upvotes - a.upvotes)
-  const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="flex  gap-4 items-center justify-center h-full">
-      <div>
-        <p>Room Creator: {roomCreator}</p>
-        {isRoomCreator && <p>You are the room creator.</p>}
-      </div>
       <div className="flex flex-col gap-3 bg-gray-400 p-2">
         <input
           type="text"
@@ -148,22 +106,6 @@ export default function Home() {
         />
         <button onClick={joinRoom}>Join Room</button>
       </div>
-      <div>
-        {sortedMessages.map((msg) => (
-          <div key={msg.id}>
-            <div>{msg.message}</div>
-            <div>Upvotes: {msg.upvotes}</div>
-            <button onClick={() => handleUpvote(msg.id)}>Upvote</button>
-          </div>
-        ))}
-      </div>
-      <input
-        type="text"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
-      />
-      <button onClick={sendMessage}>Send</button>
     </div>
   )
 }

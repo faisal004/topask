@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
 
       socket.emit('roomExists', { roomId });
       console.log("room exists")
-   
+
     } else {
 
       const creatorSocketId = socket.id;
@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
       console.log(`Room created: ${roomId} by user ${username}`);
 
 
-      io.to(roomId).emit('roomCreated', {  username, creatorSocketId });
+      io.to(roomId).emit('roomCreated', { username, creatorSocketId });
     }
   });
   socket.on('joinRoom', ({ joinroomId, joinusername }) => {
@@ -56,6 +56,8 @@ io.on('connection', (socket) => {
       socket.join(joinroomId);
       console.log(`User ${joinusername} joined room: ${joinroomId}`);
     } else {
+      socket.emit('roomDoesNotExists', { joinroomId });
+
       console.log(`Room ${joinroomId} does not exist`);
     }
   });
