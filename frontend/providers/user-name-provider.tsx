@@ -14,6 +14,12 @@ type UserRoomContextType = {
   setRoomCreator: (creator: string) => void;
   currentSocketId: string;
   setCurrentSocketId: (socketId: string) => void;
+  normalLimit: number;
+  setNormalLimit: (normalLimit:number) => void;
+  importantLimit: number;
+  setImportantLimit: ( importantLimit:number) => void;
+  mILimit: number;
+  setMILimit: (mILimit:number) => void;
 }
 
 const UserRoomContext = createContext<UserRoomContextType>({
@@ -29,6 +35,12 @@ const UserRoomContext = createContext<UserRoomContextType>({
   setRoomCreator: () => {},
   currentSocketId: '',
   setCurrentSocketId: () => {},
+  normalLimit: 0,
+  setNormalLimit: () => {},
+  importantLimit: 0,
+  setImportantLimit:  () => {},
+  mILimit: 0,
+  setMILimit:  () => {},
 })
 export const useUserRoom = () => useContext(UserRoomContext)
 
@@ -43,6 +55,9 @@ export const UserRoomProvider = ({
   const [joinroomId, setJoinRoomId] = useState<string | null>(null)
   const [roomCreator, setRoomCreator] = useState('')
   const [currentSocketId, setCurrentSocketId] = useState('')
+  const[normalLimit,setNormalLimit]=useState(2)
+  const[importantLimit,setImportantLimit]=useState(3)
+  const[mILimit,setMILimit]=useState(5)
 
   return (
     <UserRoomContext.Provider
@@ -59,6 +74,12 @@ export const UserRoomProvider = ({
         setRoomCreator,
         currentSocketId,
         setCurrentSocketId,
+        normalLimit,
+        setNormalLimit,
+        importantLimit,
+        mILimit,
+        setImportantLimit,
+        setMILimit
       }}
     >
       {children}

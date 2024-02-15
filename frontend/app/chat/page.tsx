@@ -34,7 +34,9 @@ const ChatPage = () => {
     joinroomId,
     joinusername,
     roomCreator,
-
+normalLimit,
+importantLimit,
+mILimit,
     currentSocketId,
   } = useUserRoom()
   const [message, setMessage] = useState<string>('')
@@ -114,14 +116,14 @@ const ChatPage = () => {
   const answered = sortedMessages.filter((msg) => msg.answered == true)
   console.log(answered)
   const normal = sortedMessages.filter(
-    (msg) => msg.upvotes <= 2 && msg.answered == false,
+    (msg) => msg.upvotes <= normalLimit && msg.answered == false,
   )
   const highUpvotes = sortedMessages.filter(
-    (msg) => msg.upvotes > 2 && msg.upvotes <= 3 && msg.answered == false,
+    (msg) => msg.upvotes > normalLimit && msg.upvotes <= importantLimit && msg.answered == false,
   )
   const veryHighUpvotes = sortedMessages.filter(
-    (msg) => msg.upvotes > 3 && msg.answered == false,
-  )
+    (msg) => msg.upvotes >= mILimit || msg.upvotes>importantLimit && msg.answered == false
+);
   const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="h-screen bg-gradient-to-b from-slate-100 to-slate-200">
@@ -218,7 +220,7 @@ const ChatPage = () => {
                   <p className="text-sm flex items-center justify-between  w-full gap-2">
                     <span>{message.author}</span>
                     {isRoomCreator ? (
-                      <span className="">
+                      <span className=""   onClick={() => handleAnswered(message.id)}>
                         <CheckCheck className="hover:text-green-400 cursor-pointer" />
                       </span>
                     ) : (
@@ -253,7 +255,7 @@ const ChatPage = () => {
                   <p className="text-sm flex items-center justify-between w-full gap-2">
                     <span>{message.author}</span>
                     {isRoomCreator ? (
-                      <span className="">
+                      <span className=""   onClick={() => handleAnswered(message.id)}>
                         <CheckCheck className="hover:text-green-400 cursor-pointer" />
                       </span>
                     ) : (

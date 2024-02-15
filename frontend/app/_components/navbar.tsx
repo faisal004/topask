@@ -7,6 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
+import { Switch } from '@/components/ui/switch'
 import useScrollTop from '@/hooks/use-scroll'
 import { useSocket } from '@/providers/socket-provider'
 import { useUserRoom } from '@/providers/user-name-provider'
@@ -16,7 +17,7 @@ import { toast } from 'sonner'
 
 const Navbar = () => {
   const [isMounted, setIsMounted] = useState(false)
-  const scrolled = useScrollTop();
+  const scrolled = useScrollTop()
   console.log(scrolled)
   const { socket } = useSocket()
   const router = useRouter()
@@ -33,6 +34,12 @@ const Navbar = () => {
     setRoomCreator,
     setCurrentSocketId,
     currentSocketId,
+    normalLimit,
+    importantLimit,
+    mILimit,
+    setNormalLimit,
+    setImportantLimit,
+    setMILimit,
   } = useUserRoom()
 
   useEffect(() => {
@@ -63,7 +70,7 @@ const Navbar = () => {
     return null
   }
 
-  const createRoom = (e:any) => {
+  const createRoom = (e: any) => {
     e.preventDefault()
     if (roomId?.trim() !== '' && username?.trim() !== '' && socket) {
       socket.emit('createRoom', { roomId, username })
@@ -73,7 +80,7 @@ const Navbar = () => {
       router.push('/chat')
     }
   }
-  const joinRoom = (e:any) => {
+  const joinRoom = (e: any) => {
     e.preventDefault()
     if (joinroomId?.trim() !== '' && joinusername?.trim() !== '' && socket) {
       console.log(`Joining room: ${joinroomId} as user ${joinroomId}`)
@@ -85,7 +92,13 @@ const Navbar = () => {
   }
 
   return (
-    <div className={ ` ${scrolled ? "bg-gradient-to-r from-orange-100 to-oranage-200 opacity-100":""} z-20 fixed w-full h-16 flex justify-between items-center px-2 shadow-sm border-b-2 border-gray-400 `}>
+    <div
+      className={` ${
+        scrolled
+          ? 'bg-gradient-to-r from-orange-100 to-oranage-200 opacity-100'
+          : ''
+      } z-20 fixed w-full h-16 flex justify-between items-center px-2 shadow-sm border-b-2 border-gray-400 `}
+    >
       <div className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-yellow-600 font-bold text-xl">
         TopAsk
       </div>
@@ -119,6 +132,44 @@ const Navbar = () => {
                       onChange={(e) => setRoomId(e.target.value)}
                       required
                     />
+                    <div className="h-10 w-full flex items-center justify-between border-2 border-gray-400 rounded-md px-2">
+                      <div>Want to Enable Slow mode?</div>
+                      <Switch />
+                    </div>
+                    <div className=" w-full flex flex-col items-start justify-center border-2 border-gray-400 rounded-md px-2">
+                      <div className="text-black py-2 ">
+                        Also set questions vote threshold
+                      </div>
+                      <div className="flex flex-col gap-3 mb-2">
+                        <div className=" flex  items-start  justify-start   ">
+                          <span className="text-blue-800"> Normal Limit-</span>
+                          <input
+                            type="number"
+                            value={normalLimit}
+                            onChange={(e:any) => setNormalLimit(e.target.value)}
+                            className="border-2 border-blue-500 rounded-md ml-2 px-2 w-20"
+                          />
+                        </div>
+                        <div className=" flex  items-start  justify-start  ">
+                          <span className="text-yellow-800"> Important-</span>
+                          <input
+                            type="number"
+                            value={importantLimit}
+                            onChange={(e:any) => setImportantLimit(e.target.value)}
+                            className="border-2 border-yellow-500 rounded-md ml-2 px-2 w-20"
+                          />
+                        </div>{' '}
+                        <div className=" flex  items-start  justify-start  ">
+                          <span className="text-red-800"> Most Important-</span>
+                          <input
+                            type="number"
+                            value={mILimit}
+                            onChange={(e:any) => setMILimit(e.target.value)}
+                            className="border-2 border-red-500 rounded-md ml-2 px-2 w-20"
+                          />
+                        </div>
+                      </div>
+                    </div>
                     <button
                       type="submit"
                       onClick={createRoom}
