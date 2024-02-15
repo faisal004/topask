@@ -13,8 +13,7 @@ const How = () => {
         <div className="h-60 w-80 bg-gradient-to-tr from-orange-400 to-yellow-400 rounded-2xl border-2 shadow-lg hover:shadow-orange-600 flex flex-col items-center justify-start p-4">
           <div className="text-3xl  w-full text-left">Create Room</div>
           <div className="leading-5 mt-2">
-            Users can create rooms with customizable slow mode settings and
-            durations. They can also define voting thresholds for message
+            Users can create rooms. They can also define voting thresholds for message
             importance levels: normal, important, and highly important. This
             feature enhances user control over chat dynamics and message
             prioritization.{' '}
@@ -47,11 +46,11 @@ const How = () => {
             Users can see all the answered questions.
           </div>
         </div>{' '}
-        <div className="h-60 w-80 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-2xl border-2 shadow-lg hover:shadow-orange-600 flex flex-col items-center justify-start p-4">
+        <div className="h-60 w-80 bg-gradient-to-r from-orange-400 to-yellow-400 rounded-2xl border-2 shadow-lg hover:shadow-orange-600 flex flex-col items-start justify-start p-4">
           <div className="text-3xl  w-full text-left">
             More features coming...
           </div>
-          <div className="leading-5 mt-2">....</div>
+          <div className="leading-5 mt-2">Features like poll and Quiz ......</div>
         </div>
       </div>
     </div>

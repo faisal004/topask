@@ -34,9 +34,10 @@ const ChatPage = () => {
     joinroomId,
     joinusername,
     roomCreator,
-normalLimit,
-importantLimit,
-mILimit,
+    normalLimit,
+    importantLimit,
+    mILimit,
+   
     currentSocketId,
   } = useUserRoom()
   const [message, setMessage] = useState<string>('')
@@ -86,6 +87,7 @@ mILimit,
         answered: false,
       })
       setMessage('')
+
       setTimeout(() => {
         setIsInputDisabled(false)
       }, 6000)
@@ -114,16 +116,21 @@ mILimit,
 
   const sortedMessages = receivedMessages.sort((a, b) => b.upvotes - a.upvotes)
   const answered = sortedMessages.filter((msg) => msg.answered == true)
-  console.log(answered)
+  
   const normal = sortedMessages.filter(
     (msg) => msg.upvotes <= normalLimit && msg.answered == false,
   )
   const highUpvotes = sortedMessages.filter(
-    (msg) => msg.upvotes > normalLimit && msg.upvotes <= importantLimit && msg.answered == false,
+    (msg) =>
+      msg.upvotes > normalLimit &&
+      msg.upvotes <= importantLimit &&
+      msg.answered == false,
   )
   const veryHighUpvotes = sortedMessages.filter(
-    (msg) => msg.upvotes >= mILimit || msg.upvotes>importantLimit && msg.answered == false
-);
+    (msg) =>
+      msg.upvotes >= mILimit ||
+      (msg.upvotes > importantLimit && msg.answered == false),
+  )
   const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="h-screen bg-gradient-to-b from-slate-100 to-slate-200">
@@ -220,7 +227,10 @@ mILimit,
                   <p className="text-sm flex items-center justify-between  w-full gap-2">
                     <span>{message.author}</span>
                     {isRoomCreator ? (
-                      <span className=""   onClick={() => handleAnswered(message.id)}>
+                      <span
+                        className=""
+                        onClick={() => handleAnswered(message.id)}
+                      >
                         <CheckCheck className="hover:text-green-400 cursor-pointer" />
                       </span>
                     ) : (
@@ -255,7 +265,10 @@ mILimit,
                   <p className="text-sm flex items-center justify-between w-full gap-2">
                     <span>{message.author}</span>
                     {isRoomCreator ? (
-                      <span className=""   onClick={() => handleAnswered(message.id)}>
+                      <span
+                        className=""
+                        onClick={() => handleAnswered(message.id)}
+                      >
                         <CheckCheck className="hover:text-green-400 cursor-pointer" />
                       </span>
                     ) : (

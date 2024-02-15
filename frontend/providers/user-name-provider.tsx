@@ -20,6 +20,8 @@ type UserRoomContextType = {
   setImportantLimit: ( importantLimit:number) => void;
   mILimit: number;
   setMILimit: (mILimit:number) => void;
+  slowMode: number;
+  setSlowMode: (slowMode:number) => void;
 }
 
 const UserRoomContext = createContext<UserRoomContextType>({
@@ -41,6 +43,8 @@ const UserRoomContext = createContext<UserRoomContextType>({
   setImportantLimit:  () => {},
   mILimit: 0,
   setMILimit:  () => {},
+  slowMode:0,
+  setSlowMode:()=>{}
 })
 export const useUserRoom = () => useContext(UserRoomContext)
 
@@ -58,6 +62,7 @@ export const UserRoomProvider = ({
   const[normalLimit,setNormalLimit]=useState(2)
   const[importantLimit,setImportantLimit]=useState(3)
   const[mILimit,setMILimit]=useState(5)
+  const[slowMode,setSlowMode]=useState(0)
 
   return (
     <UserRoomContext.Provider
@@ -79,7 +84,9 @@ export const UserRoomProvider = ({
         importantLimit,
         mILimit,
         setImportantLimit,
-        setMILimit
+        setMILimit,
+        slowMode,
+        setSlowMode
       }}
     >
       {children}

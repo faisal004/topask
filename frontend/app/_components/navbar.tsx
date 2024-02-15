@@ -17,6 +17,7 @@ import { toast } from 'sonner'
 
 const Navbar = () => {
   const [isMounted, setIsMounted] = useState(false)
+  const [isSlowModeEnabled, setIsSlowModeEnabled] = useState(false)
   const scrolled = useScrollTop()
   console.log(scrolled)
   const { socket } = useSocket()
@@ -40,6 +41,8 @@ const Navbar = () => {
     setNormalLimit,
     setImportantLimit,
     setMILimit,
+    slowMode,
+    setSlowMode,
   } = useUserRoom()
 
   useEffect(() => {
@@ -132,9 +135,34 @@ const Navbar = () => {
                       onChange={(e) => setRoomId(e.target.value)}
                       required
                     />
-                    <div className="h-10 w-full flex items-center justify-between border-2 border-gray-400 rounded-md px-2">
-                      <div>Want to Enable Slow mode?</div>
-                      <Switch />
+                    <div className=" w-full flex flex-col items-center justify-between border-2 border-gray-400 rounded-md px-2">
+                      <div className="flex justify-between w-full items-center  py-5">
+                        <div>App has a default slow mode of 6 seconds</div>
+                        {/* <Switch
+                          onCheckedChange={() =>
+                            setIsSlowModeEnabled(!isSlowModeEnabled)
+                          }
+                        /> */}
+                      </div>
+
+                      {/* <div>
+                        {isSlowModeEnabled && (
+                          <>
+                            {' '}
+                            <span>Enter Time in seconds (for eg:6000=6 seconds)</span>
+                            <input
+                              type="number"
+                              step={1000}
+                              placeholder="Time(for eg:6000=6 seconds)"
+                              className="m-4 p-2 rounded-md border-2 border-black"
+                              value={slowMode}
+                              onChange={(e: any) =>
+                                setSlowMode(e.target.value)
+                              }
+                            />{' '}
+                          </>
+                        )}
+                      </div> */}
                     </div>
                     <div className=" w-full flex flex-col items-start justify-center border-2 border-gray-400 rounded-md px-2">
                       <div className="text-black py-2 ">
@@ -146,7 +174,9 @@ const Navbar = () => {
                           <input
                             type="number"
                             value={normalLimit}
-                            onChange={(e:any) => setNormalLimit(e.target.value)}
+                            onChange={(e: any) =>
+                              setNormalLimit(e.target.value)
+                            }
                             className="border-2 border-blue-500 rounded-md ml-2 px-2 w-20"
                           />
                         </div>
@@ -155,7 +185,9 @@ const Navbar = () => {
                           <input
                             type="number"
                             value={importantLimit}
-                            onChange={(e:any) => setImportantLimit(e.target.value)}
+                            onChange={(e: any) =>
+                              setImportantLimit(e.target.value)
+                            }
                             className="border-2 border-yellow-500 rounded-md ml-2 px-2 w-20"
                           />
                         </div>{' '}
@@ -164,7 +196,7 @@ const Navbar = () => {
                           <input
                             type="number"
                             value={mILimit}
-                            onChange={(e:any) => setMILimit(e.target.value)}
+                            onChange={(e: any) => setMILimit(e.target.value)}
                             className="border-2 border-red-500 rounded-md ml-2 px-2 w-20"
                           />
                         </div>
