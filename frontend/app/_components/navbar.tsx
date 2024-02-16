@@ -78,7 +78,7 @@ const Navbar = () => {
         toast(`Room ${roomId} already exists.`)
       })
       socket.on('roomCreated', ({ username,roomId, creatorSocketId }: any) => {
-        setRoomCreator(creatorSocketId)
+        setRoomCreator(username)
         setCurrentSocketId(creatorSocketId)
       })
     }
