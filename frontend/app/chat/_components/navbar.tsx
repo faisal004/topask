@@ -38,7 +38,7 @@ const Navbar = ({ name, messages }: { name: string; messages: Message[] }) => {
   const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="bg-gradient-to-r from-gray-300 to-gray-400 font-semibold fixed w-full h-10 z-10 flex items-center justify-between px-2">
-      <div className="text-black">{name}</div>
+      {!isRoomCreator?(<div className="text-black">{name}</div>):""}
       {isRoomCreator ? (
         <div className="flex items-center">
           <input

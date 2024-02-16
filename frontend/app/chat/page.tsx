@@ -35,6 +35,8 @@ const ChatPage = () => {
     joinusername,
     roomCreator,
     normalLimit,
+    setRoomCreator,
+    setCurrentSocketId,
     importantLimit,
     mILimit,
     slowMode,
@@ -67,6 +69,10 @@ const ChatPage = () => {
           ])
         }
       })
+      socket.on('roomCreated', ({ username,roomId, creatorSocketId }: any) => {
+        setRoomCreator(creatorSocketId)
+        setCurrentSocketId(creatorSocketId)
+      })
     }
 
     return () => {
@@ -74,7 +80,7 @@ const ChatPage = () => {
         socket.off('message')
       }
     }
-  }, [socket, receivedMessages, roomId, username, joinroomId])
+  }, [socket, receivedMessages, roomId, username, joinroomId,setRoomCreator,setCurrentSocketId])
   const sendMessage = () => {
     if (message.trim() !== '' && socket) {
       setIsInputDisabled(true)
