@@ -14,9 +14,20 @@ import { useUserRoom } from '@/providers/user-name-provider'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useForm } from 'react-hook-form'
+
+type CreateRoomFields = {
+  roomId: string
+  username: string
+  delay?: number
+  normal: number
+  high: number
+  veryHigh: number
+}
 
 const Navbar = () => {
   const [isMounted, setIsMounted] = useState(false)
+  const { register, handleSubmit } = useForm<CreateRoomFields>()
   const [isSlowModeEnabled, setIsSlowModeEnabled] = useState(false)
   const scrolled = useScrollTop()
   console.log(scrolled)
@@ -52,7 +63,7 @@ const Navbar = () => {
     } else {
       socket.on(
         'roomLimits',
-        ({ normalLimit, importantLimit, mILimit,slowMode}: any) => {
+        ({ normalLimit, importantLimit, mILimit, slowMode }: any) => {
           setNormalLimit(normalLimit)
           setImportantLimit(importantLimit)
           setMILimit(mILimit)
@@ -62,7 +73,6 @@ const Navbar = () => {
 
       socket.on('roomDoesNotExists', ({ joinroomId }: any) => {
         toast(`Room ${joinroomId} does not exists.`)
-        
       })
       socket.on('roomExists', ({ roomId }: any) => {
         toast(`Room ${roomId} already exists.`)
@@ -85,7 +95,6 @@ const Navbar = () => {
   }
 
   const createRoom = (e: any) => {
-    e.preventDefault()
     if (roomId?.trim() !== '' && username?.trim() !== '' && socket) {
       socket.emit('createRoom', {
         roomId,
@@ -93,9 +102,11 @@ const Navbar = () => {
         normalLimit,
         importantLimit,
         mILimit,
-        slowMode
+        slowMode,
       })
-      console.log(`Room created: ${roomId} by user ${username} Delay- ${slowMode}`)
+      console.log(
+        `Room created: ${roomId} by user ${username} Delay- ${slowMode}`,
+      )
       toast(`Room ${roomId} created`)
 
       router.push('/chat')
@@ -136,8 +147,15 @@ const Navbar = () => {
               <DialogTitle>Create Room</DialogTitle>
               <DialogDescription>
                 <div className=" ">
-                  <form action="" className="flex flex-col gap-6 mt-10">
+                  <form
+                    action=""
+                    onSubmit={handleSubmit(createRoom)}
+                    className="flex flex-col gap-6 mt-10"
+                  >
                     <input
+                      {...register('username', {
+                        required: true,
+                      })}
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Your Name"
@@ -146,6 +164,9 @@ const Navbar = () => {
                       required
                     />
                     <input
+                      {...register('roomId', {
+                        required: true,
+                      })}
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Room Name"
@@ -167,16 +188,19 @@ const Navbar = () => {
                         {isSlowModeEnabled && (
                           <>
                             {' '}
-                            <span>Enter Time in seconds (10 seconds or what you want)</span>
+                            <span>
+                              Enter Time in seconds (10 seconds or what you
+                              want)
+                            </span>
                             <input
                               type="number"
-                            
+                              {...register('delay', {
+                                required: true,
+                              })}
                               placeholder="1 or 10 seconds"
                               className="m-4 p-2 rounded-md border-2 border-black"
                               value={slowMode}
-                              onChange={(e: any) =>
-                                setSlowMode(e.target.value)
-                              }
+                              onChange={(e: any) => setSlowMode(e.target.value)}
                             />{' '}
                           </>
                         )}
@@ -190,6 +214,9 @@ const Navbar = () => {
                         <div className=" flex  items-start  justify-start   ">
                           <span className="text-blue-800"> Normal Limit-</span>
                           <input
+                            {...register('normal', {
+                              required: true,
+                            })}
                             type="number"
                             value={normalLimit}
                             onChange={(e: any) =>
@@ -201,6 +228,9 @@ const Navbar = () => {
                         <div className=" flex  items-start  justify-start  ">
                           <span className="text-yellow-800"> Important-</span>
                           <input
+                            {...register('high', {
+                              required: true,
+                            })}
                             type="number"
                             value={importantLimit}
                             onChange={(e: any) =>
@@ -212,6 +242,9 @@ const Navbar = () => {
                         <div className=" flex  items-start  justify-start  ">
                           <span className="text-red-800"> Most Important-</span>
                           <input
+                            {...register('veryHigh', {
+                              required: true,
+                            })}
                             type="number"
                             value={mILimit}
                             onChange={(e: any) => setMILimit(e.target.value)}
@@ -222,7 +255,6 @@ const Navbar = () => {
                     </div>
                     <button
                       type="submit"
-                      onClick={createRoom}
                       className="px-8 py-2 rounded-md bg-gradient-to-r from-orange-600 to-yellow-600 text-white font-bold transition duration-200  border-2 border-transparent hover:border-red-500"
                     >
                       Create Room
@@ -246,7 +278,11 @@ const Navbar = () => {
               <DialogTitle>Join Room</DialogTitle>
               <DialogDescription>
                 <div className=" ">
-                  <form action="" className="flex flex-col gap-6 mt-10">
+                  <form
+                    action=""
+                    onSubmit={joinRoom}
+                    className="flex flex-col gap-6 mt-10"
+                  >
                     <input
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
@@ -265,7 +301,6 @@ const Navbar = () => {
                     />
                     <button
                       type="submit"
-                      onClick={joinRoom}
                       className="px-8 py-2 rounded-md bg-gradient-to-r from-orange-600 to-yellow-600 text-white font-bold transition duration-200  border-2 border-transparent hover:border-red-500"
                     >
                       Join Room

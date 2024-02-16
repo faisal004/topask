@@ -1,4 +1,4 @@
-import { EyeIcon } from 'lucide-react'
+
 
 const How = () => {
   return (
@@ -13,8 +13,8 @@ const How = () => {
         <div className="h-60 w-80 bg-gradient-to-tr from-orange-400 to-yellow-400 rounded-2xl border-2 shadow-lg hover:shadow-orange-600 flex flex-col items-center justify-start p-4">
           <div className="text-3xl  w-full text-left">Create Room</div>
           <div className="leading-5 mt-2">
-            Users can create rooms. They can also define voting thresholds for message
-            importance levels: normal, important, and highly important. This
+            Users can create rooms and set the delay of the chat. They can also define voting thresholds for message
+            importance levels: <span className='text-blue-600'> normal </span>, <span className='text-yellow-800'>important</span>, and <span className='text-red-600'>highly important </span> . This
             feature enhances user control over chat dynamics and message
             prioritization.{' '}
           </div>

@@ -20,6 +20,7 @@
     "query-string": "^8.2.0",
     "react": "^18",
     "react-dom": "^18",
+    "react-hook-form": "^7.50.1",
     "react-resizable-panels": "^2.0.3",
     "reactflow": "^11.10.3",
     "socket.io-client": "^4.7.4",
