@@ -26,7 +26,7 @@ const Navbar = ({ name, messages }: { name: string; messages: Message[] }) => {
   console.log('faisal', { messages })
   const [copied, setCopied] = useState(false)
   const onCopy = () => {
-    navigator.clipboard.writeText(roomId)
+    navigator.clipboard.writeText(roomId as string)
     setCopied(true)
 
     setTimeout(() => {
@@ -41,7 +41,7 @@ const Navbar = ({ name, messages }: { name: string; messages: Message[] }) => {
         <div className="flex items-center">
           <input
             className="flex-1 px-2 text-xs border rounded-l-md h-8 bg-muted truncate"
-            value={roomId}
+            value={roomId as string}
             disabled
           />
           <Button

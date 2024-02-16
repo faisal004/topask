@@ -159,7 +159,7 @@ const Navbar = () => {
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Your Name"
-                      value={username}
+                      value={username as string}
                       onChange={(e) => setUsername(e.target.value)}
                       required
                     />
@@ -170,7 +170,7 @@ const Navbar = () => {
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Room Name"
-                      value={roomId}
+                      value={roomId as string}
                       onChange={(e) => setRoomId(e.target.value)}
                       required
                     />
@@ -287,7 +287,7 @@ const Navbar = () => {
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Your Name"
-                      value={joinusername}
+                      value={joinusername as string}
                       onChange={(e) => setJoinUsername(e.target.value)}
                       required
                     />
@@ -295,7 +295,7 @@ const Navbar = () => {
                       type="text"
                       className="h-8 p-1 rounded-md border-2 border-black"
                       placeholder="Room Name"
-                      value={joinroomId}
+                      value={joinroomId as string}
                       onChange={(e) => setJoinRoomId(e.target.value)}
                       required
                     />

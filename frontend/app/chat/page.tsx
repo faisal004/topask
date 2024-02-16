@@ -134,7 +134,7 @@ const ChatPage = () => {
   const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="h-screen bg-gradient-to-b from-slate-100 to-slate-200">
-      <Navbar  name={roomCreator || joinusername} messages={answered} />
+      <Navbar  name={roomCreator as string || joinusername as string} messages={answered} />
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel className="relative flex flex-col items-center  ">
           <div className="h-full  w-full overflow-y-auto pb-14 pt-12 flex flex-col gap-2 ">
