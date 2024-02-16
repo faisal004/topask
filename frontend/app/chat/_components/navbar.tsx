@@ -12,6 +12,7 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 import { useUserRoom } from '@/providers/user-name-provider'
+import { useSocket } from '@/providers/socket-provider'
 interface Message {
   id: string
   author: string
@@ -22,7 +23,8 @@ interface Message {
 }
 
 const Navbar = ({ name, messages }: { name: string; messages: Message[] }) => {
-  const { roomCreator, roomId } = useUserRoom()
+  const { roomCreator, roomId,currentSocketId } = useUserRoom()
+  const { socket } = useSocket()
   console.log('faisal', { messages })
   const [copied, setCopied] = useState(false)
   const onCopy = () => {
@@ -33,11 +35,11 @@ const Navbar = ({ name, messages }: { name: string; messages: Message[] }) => {
       setCopied(false)
     }, 1000)
   }
-
+  const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="bg-gradient-to-r from-gray-300 to-gray-400 font-semibold fixed w-full h-10 z-10 flex items-center justify-between px-2">
       <div className="text-black">{name}</div>
-      {roomCreator ? (
+      {isRoomCreator ? (
         <div className="flex items-center">
           <input
             className="flex-1 px-2 text-xs border rounded-l-md h-8 bg-muted truncate"

@@ -117,6 +117,7 @@ const ChatPage = () => {
   const sortedMessages = receivedMessages.sort((a, b) => b.upvotes - a.upvotes)
   const answered = sortedMessages.filter((msg) => msg.answered == true)
   console.log('|||' + slowMode)
+  console.log(roomCreator + "Hello")
   const normal = sortedMessages.filter(
     (msg) => msg.upvotes <= normalLimit && msg.answered == false,
   )
@@ -132,6 +133,7 @@ const ChatPage = () => {
       (msg.upvotes > importantLimit && msg.answered == false),
   )
   const isRoomCreator = currentSocketId === (socket && socket.id)
+  console.log(isRoomCreator + "Hello")
   return (
     <div className="h-screen bg-gradient-to-b from-slate-100 to-slate-200">
       <Navbar  name={roomCreator as string || joinusername as string} messages={answered} />

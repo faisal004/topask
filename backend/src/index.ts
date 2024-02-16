@@ -14,6 +14,7 @@ interface Message {
 }
 interface Room {
   socketId: string;
+  roomId:string;
   username: string;
   normalLimit:number,
   importantLimit:number,
@@ -49,12 +50,12 @@ io.on('connection', (socket) => {
     } else {
 
       const creatorSocketId = socket.id;
-      rooms[roomId] = { socketId: creatorSocketId, username ,normalLimit,importantLimit,mILimit,slowMode };
+      rooms[roomId] = { socketId: creatorSocketId, username ,normalLimit,importantLimit,mILimit,slowMode,roomId };
       socket.join(roomId);
       console.log(`Room created: ${roomId} by user ${username} with ${normalLimit} || ${importantLimit} || ${mILimit} || delay - ${slowMode}`);
 
 
-      io.to(roomId).emit('roomCreated', { username, creatorSocketId,normalLimit,importantLimit,mILimit,slowMode });
+      io.to(roomId).emit('roomCreated', { username,roomId, creatorSocketId,normalLimit,importantLimit,mILimit,slowMode });
     }
   });
   socket.on('joinRoom', ({ joinroomId, joinusername }) => {

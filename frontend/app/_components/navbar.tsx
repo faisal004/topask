@@ -77,8 +77,8 @@ const Navbar = () => {
       socket.on('roomExists', ({ roomId }: any) => {
         toast(`Room ${roomId} already exists.`)
       })
-      socket.on('roomCreated', ({ username, creatorSocketId }: any) => {
-        setRoomCreator(username)
+      socket.on('roomCreated', ({ username,roomId, creatorSocketId }: any) => {
+        setRoomCreator(creatorSocketId)
         setCurrentSocketId(creatorSocketId)
       })
     }
@@ -97,6 +97,7 @@ const Navbar = () => {
   const createRoom = (e: any) => {
     if (roomId?.trim() !== '' && username?.trim() !== '' && socket) {
       socket.emit('createRoom', {
+        
         roomId,
         username,
         normalLimit,
@@ -105,7 +106,7 @@ const Navbar = () => {
         slowMode,
       })
       console.log(
-        `Room created: ${roomId} by user ${username} Delay- ${slowMode}`,
+        `Room created: ${roomId} by user ${username} -- ${roomCreator} Delay- ${slowMode}`,
       )
       toast(`Room ${roomId} created`)
 
