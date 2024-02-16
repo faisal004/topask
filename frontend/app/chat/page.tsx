@@ -37,7 +37,7 @@ const ChatPage = () => {
     normalLimit,
     importantLimit,
     mILimit,
-   
+    slowMode,
     currentSocketId,
   } = useUserRoom()
   const [message, setMessage] = useState<string>('')
@@ -87,10 +87,10 @@ const ChatPage = () => {
         answered: false,
       })
       setMessage('')
-
+      const delay = slowMode * 1000
       setTimeout(() => {
         setIsInputDisabled(false)
-      }, 6000)
+      }, delay)
     }
   }
 
@@ -116,7 +116,7 @@ const ChatPage = () => {
 
   const sortedMessages = receivedMessages.sort((a, b) => b.upvotes - a.upvotes)
   const answered = sortedMessages.filter((msg) => msg.answered == true)
-  
+  console.log('|||' + slowMode)
   const normal = sortedMessages.filter(
     (msg) => msg.upvotes <= normalLimit && msg.answered == false,
   )
@@ -134,7 +134,7 @@ const ChatPage = () => {
   const isRoomCreator = currentSocketId === (socket && socket.id)
   return (
     <div className="h-screen bg-gradient-to-b from-slate-100 to-slate-200">
-      <Navbar name={roomCreator || joinusername} messages={answered} />
+      <Navbar  name={roomCreator || joinusername} messages={answered} />
       <ResizablePanelGroup direction="horizontal">
         <ResizablePanel className="relative flex flex-col items-center  ">
           <div className="h-full  w-full overflow-y-auto pb-14 pt-12 flex flex-col gap-2 ">
@@ -175,26 +175,32 @@ const ChatPage = () => {
           {!isRoomCreator ? (
             <>
               <div className="absolute bottom-0 py-3  ">
-                <div className="flex w-full max-w-sm items-center space-x-2">
+               
+                <div className="flex  w-full max-w-sm items-center space-x-2 ">
+                 
+                 
                   <Input
                     type="text"
                     disabled={isInputDisabled}
                     value={message}
                     placeholder="send you question"
                     onChange={(e) => setMessage(e.target.value)}
-                    className="h-8 "
+                    className="h-8 focus:outline-none outline-none ring-0 focus:border-red-500 border-none border-0  "
+                    onKeyDown={(e)=>{
+                      e.key==="Enter" && sendMessage();
+                    }}
                   />
 
                   <div>
                     <Button
                       onClick={sendMessage}
                       type="submit"
-                      className="relative"
+                      className="relative h-8"
                       disabled={isInputDisabled}
                     >
                       Send
                     </Button>
-                    <div className="absolute top-9 -right-2 border-white border-2 rounded-full ">
+                    <div className="absolute top-8 -right-2 border-white border-2 rounded-full ">
                       <SocketIndicator />
                     </div>
                   </div>

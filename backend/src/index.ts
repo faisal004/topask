@@ -14,6 +14,10 @@ interface Message {
 interface Room {
   socketId: string;
   username: string;
+  normalLimit:number,
+  importantLimit:number,
+  mILimit:number,
+  slowMode:number,
 }
 const app = express();
 const server = createServer(app);
@@ -35,7 +39,7 @@ io.on('connection', (socket) => {
   socket.emit('initialMessages', messages);
 
 
-  socket.on('createRoom', ({ roomId, username }: any) => {
+  socket.on('createRoom', ({  roomId, username,normalLimit,importantLimit,mILimit,slowMode }: any) => {
     if (rooms[roomId]) {
 
       socket.emit('roomExists', { roomId });
@@ -44,19 +48,21 @@ io.on('connection', (socket) => {
     } else {
 
       const creatorSocketId = socket.id;
-      rooms[roomId] = { socketId: creatorSocketId, username };
+      rooms[roomId] = { socketId: creatorSocketId, username ,normalLimit,importantLimit,mILimit,slowMode };
       socket.join(roomId);
-      console.log(`Room created: ${roomId} by user ${username}`);
+      console.log(`Room created: ${roomId} by user ${username} with ${normalLimit} || ${importantLimit} || ${mILimit} || delay - ${slowMode}`);
 
 
-      io.to(roomId).emit('roomCreated', { username, creatorSocketId });
+      io.to(roomId).emit('roomCreated', { username, creatorSocketId,normalLimit,importantLimit,mILimit,slowMode });
     }
   });
   socket.on('joinRoom', ({ joinroomId, joinusername }) => {
     const roomData = rooms[joinroomId];
     if (roomData) {
+      const { normalLimit, importantLimit, mILimit,slowMode } = roomData;
       socket.join(joinroomId);
-      console.log(`User ${joinusername} joined room: ${joinroomId}`);
+      socket.emit('roomLimits', { normalLimit, importantLimit, mILimit,slowMode });
+      console.log(`User ${joinusername} joined room: ${joinroomId} ----- ${slowMode}`);
     } else {
       socket.emit('roomDoesNotExists', { joinroomId });
 

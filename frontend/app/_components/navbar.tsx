@@ -50,8 +50,19 @@ const Navbar = () => {
     if (!socket) {
       return
     } else {
+      socket.on(
+        'roomLimits',
+        ({ normalLimit, importantLimit, mILimit,slowMode}: any) => {
+          setNormalLimit(normalLimit)
+          setImportantLimit(importantLimit)
+          setMILimit(mILimit)
+          setSlowMode(slowMode)
+        },
+      )
+
       socket.on('roomDoesNotExists', ({ joinroomId }: any) => {
         toast(`Room ${joinroomId} does not exists.`)
+        
       })
       socket.on('roomExists', ({ roomId }: any) => {
         toast(`Room ${roomId} already exists.`)
@@ -76,8 +87,15 @@ const Navbar = () => {
   const createRoom = (e: any) => {
     e.preventDefault()
     if (roomId?.trim() !== '' && username?.trim() !== '' && socket) {
-      socket.emit('createRoom', { roomId, username })
-      console.log(`Room created: ${roomId} by user ${username}`)
+      socket.emit('createRoom', {
+        roomId,
+        username,
+        normalLimit,
+        importantLimit,
+        mILimit,
+        slowMode
+      })
+      console.log(`Room created: ${roomId} by user ${username} Delay- ${slowMode}`)
       toast(`Room ${roomId} created`)
 
       router.push('/chat')
@@ -88,7 +106,7 @@ const Navbar = () => {
     if (joinroomId?.trim() !== '' && joinusername?.trim() !== '' && socket) {
       console.log(`Joining room: ${joinroomId} as user ${joinroomId}`)
       socket.emit('joinRoom', { joinroomId, joinusername })
-      console.log(`Joining room: ${joinroomId} as user ${joinroomId}`)
+      console.log(`Joining room: ${joinroomId} as user ${joinusername}`)
 
       router.push('/chat')
     }
@@ -137,23 +155,23 @@ const Navbar = () => {
                     />
                     <div className=" w-full flex flex-col items-center justify-between border-2 border-gray-400 rounded-md px-2">
                       <div className="flex justify-between w-full items-center  py-5">
-                        <div>App has a default slow mode of 6 seconds</div>
-                        {/* <Switch
+                        <div>Enable Slowmode?</div>
+                        <Switch
                           onCheckedChange={() =>
                             setIsSlowModeEnabled(!isSlowModeEnabled)
                           }
-                        /> */}
+                        />
                       </div>
 
-                      {/* <div>
+                      <div>
                         {isSlowModeEnabled && (
                           <>
                             {' '}
-                            <span>Enter Time in seconds (for eg:6000=6 seconds)</span>
+                            <span>Enter Time in seconds (10 seconds or what you want)</span>
                             <input
                               type="number"
-                              step={1000}
-                              placeholder="Time(for eg:6000=6 seconds)"
+                            
+                              placeholder="1 or 10 seconds"
                               className="m-4 p-2 rounded-md border-2 border-black"
                               value={slowMode}
                               onChange={(e: any) =>
@@ -162,7 +180,7 @@ const Navbar = () => {
                             />{' '}
                           </>
                         )}
-                      </div> */}
+                      </div>
                     </div>
                     <div className=" w-full flex flex-col items-start justify-center border-2 border-gray-400 rounded-md px-2">
                       <div className="text-black py-2 ">
